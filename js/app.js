@@ -1,17 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import VueRouter from 'vue-router'
+import { createStore } from 'vuex'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import App from '../component/App.vue'
 import Login from '../component/Login.vue'
 import UserInfo from '../component/UserInfo.vue'
-//状态管理
-Vue.use(Vuex)
-  //路由
-Vue.use(VueRouter)
 
 //路由配置
-//如果需要加菜单，就在这里添加路由，并在UserMenu.vue添加入口router-link
-const router = new VueRouter({
+const appRouter = createRouter({
+  history: createWebHashHistory(),
   routes: [{
     path: '/login',
     component: Login
@@ -21,10 +16,16 @@ const router = new VueRouter({
   }]
 })
 
+//创建应用
+const application = createApp(App)
+
+//使用路由
+app.use(appRouter)
+
 //Vuex配置
-const store = new Vuex.Store({
+const store = createStore({
   state: {
-    domain:'http://test.example.com', //保存后台请求的地址，修改时方便（比方说从测试服改成正式服域名）
+    domain: 'http://test.example.com', //保存后台请求的地址，修改时方便（比方说从测试服改成正式服域名）
     userInfo: { //保存用户信息
       nick: null,
       ulevel: null,
@@ -39,6 +40,12 @@ const store = new Vuex.Store({
     }
   }
 })
+
+//挂载应用
+app.use(store)
+app.use(router)
+app.mount('#app')
+
 
 //设置cookie,增加到vue实例方便全局调用
 //vue全局调用的理由是，有些组件所用到的接口可能需要session验证，session从cookie获取

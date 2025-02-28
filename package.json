@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "vows": "^0.8.1",
-    "vue": "^2.0.1",
-    "vuex": "^2.1.2"
+    "vue": "^3.0.0",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
@@ -27,11 +27,12 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "style-loader": "^0.13.1",
-    "vue-loader": "^9.7.0",
+    "vue-loader": "^16.0.0",
     "vue-router": "^2.1.1",
     "vue-style-loader": "^1.0.0",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2",
-    "webpack-merge": "^0.15.0"
+    "webpack-merge": "^0.15.0",
+    "@vue/compiler-sfc": "^3.0.0"
   }
 }
