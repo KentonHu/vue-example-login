@@ -1,54 +1,72 @@
-//使用命令：'npm run build'
-
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './js/app.js',
-  //让打包后生成在build.js文件中
+  mode: "production",
+  entry: "./src/js/app.js",
   output: {
-    path: './js',
-    publicPath: './assets',
-    filename: 'build.js'
+    path: path.resolve(__dirname, "dist"), // 输出路径指向 dist 目录
+    filename: "[name].[contenthash].js", // 添加哈希值
+    chunkFilename: "[name].[contenthash].chunk.js", // 添加 chunk 哈希值
+    clean: true, // Webpack 5 新增的清理构建目录功能
   },
-  module: {
-    loaders: [{
-        test: /\.vue$/,
-        loader: 'vue',
-        options:{}
-      },
-      //转化ES6语法
-      {
-        test: /\.js$/,
-        loader: 'babel',
-        exclude: /node_modules/
-      },
-      //图片转化，小于8K自动转化为base64的编码
-      {
-        test: /\.(png|jpg|gif)$/,
-        loader: 'url-loader?name=assets/[name][hash:8].[ext]'
-      }
-    ]
-  },
-  plugins: [
-    new webpack.BannerPlugin("author: lhq\n" + new Date().toLocaleString()),
-    new webpack.optimize.UglifyJsPlugin({ //压缩插件
-      compress: {
-        warnings: false //不显示警告
-      }
-    }),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new ExtractTextPlugin("[name]-[hash].css")
-  ],
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue'
-    }
+      vue: "vue/dist/vue.esm-bundler.js", // ✅ Vue 3 必要配置
+    },
+  }, // 添加缺失的逗号
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        loader: "vue-loader",
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "assets/[name][hash:8][ext]",
+        },
+      },
+    ],
   },
-  //这里用于安装babel，如果在根目录下的.babelrc配置了，这里就不写了
-  babel: {
-    presets: ['es2015', 'stage-0'],
-    plugins: ['transform-runtime']
-  }
-}
+  plugins: [
+    new VueLoaderPlugin(),
+    new MiniCssExtractPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html", // 指定模板文件
+      filename: "index.html", // 输出文件名
+      inject: "body", // 注入资源到 body 底部
+    }),
+  ],
+  optimization: {
+    // 注意冒号
+    minimize: true,
+    splitChunks: {
+      chunks: "all",
+    }, // 注意结尾的逗号（如果后面还有其他配置项）
+  },
+  resolve: {
+    alias: {
+      vue$: "vue/dist/vue.esm-bundler.js",
+    },
+    extensions: [".js", ".vue"],
+  },
+};

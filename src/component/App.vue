@@ -53,7 +53,7 @@ export default {
       });*/
 
       //提交mutation到Store
-      this.$store.commit('updateUserInfo', this.userInfo); 
+     // this.$store.commit('updateUserInfo', this.userInfo); 
     }
   }
 }
@@ -125,11 +125,14 @@ body{background:#f1f1f1; margin: 0; padding: 0; font-family:'Source Sans Pro', '
   transition: all .3s ease;
 }
 .slide-leave-active {
-  /* transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0); */
+  transition: all 0.3s ease-in;
+  position: absolute;  /* 防止布局抖动 */
+  width: 100%;
 }
-.slide-enter, .slide-leave-active {
-  transform: translateX(10px);
+.slide-enter,
+.slide-leave-to {
   opacity: 0;
+  transform: translateX(20px);
 }
 
 </style>

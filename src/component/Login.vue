@@ -10,7 +10,7 @@
         <div class="log-cloud cloud4"></div>
 
         <div class="log-logo">Welcome!</div>
-        <div class="log-text">@doterlin</div>
+        <div class="log-text">@hutianyu</div>
     </div>
     <div class="log-email">
         <input type="text" placeholder="Email" :class="'log-input' + (account==''?' log-input-empty':'')" v-model="account"><input type="password" placeholder="Password" :class="'log-input' + (password==''?' log-input-empty':'')"  v-model="password">
@@ -22,6 +22,7 @@
 
 <script>
 import Loading from './Loading.vue'
+//import hex_sha1 from '../js/sha1.min.js'
 export default {
   name: 'Login',
   data(){
@@ -48,30 +49,17 @@ export default {
 
   		//一般要跟后端了解密码的加密规则
   		//这里例子用的哈希算法来自./js/sha1.min.js
-  		let password_sha = hex_sha1(hex_sha1( this.password ));
+  //		let password_sha = hex_sha1(hex_sha1( this.password ));
 
   		//需要想后端发送的登录参数
   		let loginParam = {
   			account: this.account,
-  			password_sha
+  			//password_sha
   		}
 
       //设置在登录状态
       this.isLoging = true;
       
-  		//请求后端,比如:
-  		/*this.$http.post( 'example.com/login.php', {
-  		param: loginParam).then((response) => {
-        if(response.data.code == 1){
-          let expireDays = 1000 * 60 * 60 * 24 * 15;
-          this.setCookie('session', response.data.session, expireDays);
-          //登录成功后
-          this.$router.push('/user_info'); 
-        }
-	    }, (response) => {
-	        //Error
-	    });
-  		*/
   	   
       //演示用
   		setTimeout(()=>{
